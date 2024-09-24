@@ -1,38 +1,167 @@
-.App {
+/* Global dark theme */
+body {
+  background-color: #121212;
+  color: #ffffff;
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Prevent scrollbars in fullscreen */
+}
+
+/* App container */
+.app-container {
   text-align: center;
+  padding: 20px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Heading styling */
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: #ffcc00;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Buttons styling */
+.buttons-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-wrap: wrap; /* Allow buttons to wrap on small screens */
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+button {
+  background-color: #ff4081;
+  border: none;
   color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 1rem; /* Set a default font size */
 }
 
-.App-link {
-  color: #61dafb;
+button:hover {
+  background-color: #e91e63;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+/* Clock styling */
+.clock {
+  font-size: 5rem;
+  color: #ffffff;
+}
+
+/* Stopwatch styling */
+.stopwatch {
+  font-size: 5rem; /* Default size for normal display */
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Format switch */
+.format-switch {
+  margin-top: 10px;
+}
+
+/* Switch label styling */
+.switch-label {
+  font-size: 1.2rem;
+  color: #ffcc00;
+}
+
+input[type="checkbox"] {
+  margin-left: 10px;
+  transform: scale(1.2);
+}
+
+/* Fullscreen mode */
+.fullscreen {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #121212;
+  position: relative;
+}
+
+/* Fullscreen clock to cover the entire screen */
+.fullscreen-clock .clock {
+  font-size: 20rem;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+}
+
+/* Fullscreen stopwatch to cover the entire screen */
+.fullscreen-stopwatch .stopwatch {
+  font-size: 20rem; /* Adjust size for full screen */
+  width: 100vw; 
+  height: 100vh; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  color: #ffffff;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .clock {
+    font-size: 3rem;
   }
-  to {
-    transform: rotate(360deg);
+
+  .stopwatch {
+    font-size: 5rem; /* Keep default size for smaller devices */
   }
+
+  button {
+    padding: 8px 16px;
+    font-size: 0.9rem; /* Slightly smaller font for buttons */
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+}
+
+/* Close Fullscreen Button */
+.close-fullscreen {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: rgba(255, 0, 0, 0.7); /* Semi-transparent red */
+  border: none;
+  color: white;
+  padding: 10px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 10; /* Ensure it stays above other content */
+}
+
+.close-fullscreen:hover {
+  background-color: rgba(255, 0, 0, 1); /* Solid red on hover */
+}
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.modal input {
+  margin-bottom: 10px;
+}
+
+.modal button {
+  margin-right: 10px;
 }

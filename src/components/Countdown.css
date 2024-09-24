@@ -1,0 +1,21 @@
+.countdown-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 80vh; /* 80% of the viewport height */
+    width: 100%; /* Full width */
+  }
+  
+  .countdown-display {
+    font-size: 10rem; /* Increase font size to cover more space */
+    color: #ff5733; /* Change text color */
+    text-align: center; /* Center the text */
+    margin: 20px 0; /* Add some margin */
+  }
+  
+  .button-container {
+    display: flex;
+    gap: 10px; /* Space between buttons */
+  }
+  
