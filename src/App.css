@@ -1,8 +1,9 @@
 /* Global dark theme */
 body {
   background-color: #121212;
-  color: #ffffff;
-  font-family: 'Arial', sans-serif;
+  color: var(--font-color, #ffffff); /* Dynamic font color */
+  font-family: var(--font-family, 'Arial, sans-serif'); /* Dynamic font family */
+  font-size: var(--font-size, 16px); /* Dynamic font size */
   margin: 0;
   padding: 0;
   overflow: hidden; /* Prevent scrollbars in fullscreen */
@@ -12,13 +13,15 @@ body {
 .app-container {
   text-align: center;
   padding: 20px;
+  transition: background-color 0.3s, color 0.3s, font-family 0.3s, font-size 0.3s; 
+  overflow: auto; /* Enable scrolling for content overflow */
 }
 
 /* Heading styling */
 h1 {
   font-size: 2.5rem;
   margin-bottom: 20px;
-  color: #ffcc00;
+  color: #ffcc00; /* Highlight color */
 }
 
 /* Buttons styling */
@@ -39,25 +42,21 @@ button {
   cursor: pointer;
   transition: background-color 0.3s ease;
   font-size: 1rem; /* Set a default font size */
+  font-family: var(--font-family, 'Arial, sans-serif'); /* Dynamic font family */
 }
 
 button:hover {
-  background-color: #e91e63;
+  background-color: #e91e63; /* Hover color */
 }
 
 /* Clock styling */
-.clock {
+.clock, .stopwatch {
   font-size: 5rem;
-  color: #ffffff;
-}
-
-/* Stopwatch styling */
-.stopwatch {
-  font-size: 5rem; /* Default size for normal display */
-  color: #ffffff;
+  color: var(--font-color, #ffffff); /* Dynamic font color */
   display: flex;
   justify-content: center;
   align-items: center;
+  font-family: var(--font-family, 'Arial, sans-serif'); /* Dynamic font family */
 }
 
 /* Format switch */
@@ -83,50 +82,21 @@ input[type="checkbox"] {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #121212;
+  background-color: var(--bgColor);
   position: relative;
+  overflow: hidden; /* Prevent scrollbars in fullscreen */
 }
 
-/* Fullscreen clock to cover the entire screen */
-.fullscreen-clock .clock {
+/* Fullscreen clock/stopwatch to cover the entire screen */
+.fullscreen-clock .clock, .fullscreen-stopwatch .stopwatch {
   font-size: 20rem;
   width: 100vw;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #ffffff;
-}
-
-/* Fullscreen stopwatch to cover the entire screen */
-.fullscreen-stopwatch .stopwatch {
-  font-size: 20rem; /* Adjust size for full screen */
-  width: 100vw; 
-  height: 100vh; 
-  display: flex; 
-  justify-content: center; 
-  align-items: center; 
-  color: #ffffff;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .clock {
-    font-size: 3rem;
-  }
-
-  .stopwatch {
-    font-size: 5rem; /* Keep default size for smaller devices */
-  }
-
-  button {
-    padding: 8px 16px;
-    font-size: 0.9rem; /* Slightly smaller font for buttons */
-  }
-
-  h1 {
-    font-size: 2rem;
-  }
+  
+  color: var(--font-color, #ffffff); /* Dynamic font color */
 }
 
 /* Close Fullscreen Button */
@@ -147,12 +117,14 @@ input[type="checkbox"] {
 .close-fullscreen:hover {
   background-color: rgba(255, 0, 0, 1); /* Solid red on hover */
 }
+
+/* Modal styling */
 .modal {
   position: fixed;
-  top: 50%;
+  top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: white;
+  background-color: rgb(65, 0, 0);
   padding: 20px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   z-index: 1000;
@@ -164,4 +136,85 @@ input[type="checkbox"] {
 
 .modal button {
   margin-right: 10px;
+}
+
+/* Menu icon */
+.menu-icon {
+  position: fixed;
+  top: 10px;
+  right: 40px;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 1000;
+  color: #ffcc00;
+}
+
+/* Hide menu icon and scrollbar in fullscreen */
+.fullscreen .menu-icon {
+  display: none; /* Hide menu icon */
+}
+
+.fullscreen::-webkit-scrollbar {
+  display: none; /* Hide scrollbar in fullscreen */
+}
+
+/* Sidebar for settings */
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: -250px; /* Hidden by default */
+  width: 200px;
+  height: 100%;
+  color: white;
+  transition: right 0.3s ease-in-out; /* Smooth slide-in effect */
+  z-index: 999;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent black background */
+}
+
+.sidebar.open {
+  right: 0; /* Show sidebar */
+}
+
+.sidebar input,
+.sidebar select {
+  margin-bottom: 10px;
+  width: 100%;
+  padding: 5px;
+  font-size: 1rem; /* Ensure font size remains constant */
+}
+
+.sidebar h3 {
+  margin-top: 0;
+  color: #fff; /* Sidebar heading color */
+}
+
+/* Sidebar input styling for font customization */
+.sidebar label {
+  display: block;
+  margin-bottom: 5px;
+  color: #ffcc00; /* Label color */
+}
+
+.sidebar input[type="color"] {
+  width: 100%;
+  height: 30px;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.sidebar select {
+  padding: 8px;
+}
+
+.switch-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 5px; 
+}
+
+.switch-label span {
+  margin-left: 10px; /* Space between switch and label text */
 }

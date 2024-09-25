@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 const CountdownModal = ({ onClose, onStartCountdown }) => {
-  const [inputSeconds, setInputSeconds] = useState(60); // Default countdown time
+  const [inputSeconds, setInputSeconds] = useState(30); // Default countdown time
 
   const handleStart = () => {
     onStartCountdown(inputSeconds);

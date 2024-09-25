@@ -1,36 +1,73 @@
-// Stopwatch.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Stopwatch.css'; // Ensure to import the CSS file
 
 const Stopwatch = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [time, setTime] = useState(0); // Time in milliseconds
   const [laps, setLaps] = useState([]);
+  const startTimeRef = useRef(null); // Reference to track the start time
+  const savedTimeRef = useRef(0); // To store the time elapsed before stopping
+  const intervalId = useRef(null); // Reference for the interval ID
 
   useEffect(() => {
-    let interval = null;
-    if (isRunning) {
-      interval = setInterval(() => {
-        setTime((prevTime) => prevTime + 10); // Update time every 10ms
-      }, 10);
-    } else if (!isRunning && time !== 0) {
-      clearInterval(interval);
+    // Check if there's any saved state (if user refreshes page, for example)
+    const storedStartTime = localStorage.getItem('stopwatchStartTime');
+    const storedSavedTime = localStorage.getItem('stopwatchSavedTime');
+
+    if (storedStartTime && storedSavedTime) {
+      const currentTime = Date.now();
+      const savedTime = Number(storedSavedTime);
+      const elapsedTime = currentTime - Number(storedStartTime);
+      setTime(savedTime + elapsedTime);
+      startTimeRef.current = Number(storedStartTime);
+      savedTimeRef.current = savedTime;
+
+      // Restart the stopwatch automatically
+      intervalId.current = setInterval(() => {
+        const elapsed = Date.now() - startTimeRef.current;
+        setTime(savedTime + elapsed);
+      }, 100);
+      setIsRunning(true);
     }
-    return () => clearInterval(interval);
-  }, [isRunning, time]);
+
+    return () => {
+      clearInterval(intervalId.current); // Clean up interval on unmount
+    };
+  }, []);
 
   const handleStartStop = () => {
-    setIsRunning((prev) => !prev);
+    if (isRunning) {
+      // Stop the stopwatch
+      clearInterval(intervalId.current);
+      savedTimeRef.current = time; // Save the current time
+      localStorage.setItem('stopwatchSavedTime', savedTimeRef.current); // Save to localStorage
+      setIsRunning(false);
+      localStorage.removeItem('stopwatchStartTime'); // Remove start time from storage
+    } else {
+      // Start the stopwatch
+      const currentTime = Date.now();
+      startTimeRef.current = currentTime; // Record the current start time
+      localStorage.setItem('stopwatchStartTime', currentTime); // Save to localStorage
+      intervalId.current = setInterval(() => {
+        const elapsed = Date.now() - startTimeRef.current;
+        setTime(savedTimeRef.current + elapsed);
+      }, 100);
+      setIsRunning(true);
+    }
   };
 
   const handleReset = () => {
+    clearInterval(intervalId.current); // Stop the interval
     setIsRunning(false);
     setTime(0);
     setLaps([]);
+    savedTimeRef.current = 0;
+    localStorage.removeItem('stopwatchStartTime'); // Clear storage
+    localStorage.removeItem('stopwatchSavedTime'); // Clear storage
   };
 
   const handleLap = () => {
-    setLaps((prevLaps) => [...prevLaps, time]);
+    setLaps((prevLaps) => [...prevLaps, time]); // Record the current time as a lap
   };
 
   const formatTime = (time) => {

@@ -6,54 +6,59 @@ const Countdown = ({ initialSeconds, onReset }) => {
   const [isRunning, setIsRunning] = useState(false);
   const [isMuted, setIsMuted] = useState(false); // State for muting/unmuting audio
 
-  // Use useMemo to create audio instances, preventing them from being recreated on every render
   const tickAudio = useMemo(() => new Audio(`${process.env.PUBLIC_URL}/tick.wav`), []);
   const doneAudio = useMemo(() => new Audio(`${process.env.PUBLIC_URL}/done.wav`), []);
 
   useEffect(() => {
     let timer;
-    let tickInterval;
 
     if (isRunning) {
-      if (seconds > 0) {
-        // Play ticking sound every second while the countdown is running
-        if (!isMuted) tickAudio.play();
-        tickInterval = setInterval(() => {
-          setSeconds((prev) => prev - 1);
-        }, 1000);
-      } else {
-        // Countdown finished
-        doneAudio.loop = true; // Loop the done sound
-        if (!isMuted) doneAudio.play(); // Play the done sound
-      }
+      // Start a timer to decrement seconds
+      timer = setInterval(() => {
+        setSeconds((prev) => {
+          if (prev > 1) {
+            // Play tick sound
+            if (!isMuted) {
+              tickAudio.play().catch((error) => console.error("Audio play error: ", error));
+            }
+            return prev - 1;
+          } else {
+            // Countdown finished
+            doneAudio.loop = true;
+            if (!isMuted) {
+              doneAudio.play().catch((error) => console.error("Audio play error: ", error));
+            }
+            clearInterval(timer); // Stop the interval when done
+            return 0; // Set seconds to 0 when done
+          }
+        });
+      }, 1000);
     }
 
     // Cleanup function
     return () => {
       clearInterval(timer);
-      clearInterval(tickInterval);
-      tickAudio.pause(); // Pause ticking sound when not running
-      doneAudio.pause(); // Pause done sound
+      // Reset audio
+      tickAudio.pause();
+      doneAudio.pause();
       doneAudio.currentTime = 0; // Reset done sound to the beginning
     };
-  }, [isRunning, seconds, tickAudio, doneAudio, isMuted]);
+  }, [isRunning, tickAudio, doneAudio, isMuted]);
 
   const handleStart = () => {
-    setSeconds(initialSeconds); // Reset seconds when starting
-    setIsRunning(true);
+    if (seconds > 0) {
+      setIsRunning(true);
+    }
   };
 
   const handleStop = () => {
     setIsRunning(false);
-    tickAudio.pause(); // Pause ticking sound
-    doneAudio.pause(); // Pause done sound
-    doneAudio.currentTime = 0; // Reset done sound to the beginning
   };
 
   const handleReset = () => {
     setIsRunning(false);
-    setSeconds(initialSeconds);
-    onReset(); // Reset functionality
+    setSeconds(initialSeconds); // Reset to initial seconds
+    onReset(); // Call reset function
     tickAudio.pause(); // Pause ticking sound
     doneAudio.pause(); // Pause done sound
     doneAudio.currentTime = 0; // Reset done sound to the beginning
@@ -68,7 +73,7 @@ const Countdown = ({ initialSeconds, onReset }) => {
       <h2>Countdown Timer</h2>
       <h3 className="countdown-display">{seconds > 0 ? seconds : 'Time is up!'}</h3>
       <div className="button-container">
-        <button onClick={handleStart} disabled={isRunning || seconds === 0}>Start</button>
+        <button onClick={handleStart} disabled={isRunning || seconds <= 0}>Start</button>
         <button onClick={handleStop} disabled={!isRunning}>Stop</button>
         <button onClick={handleReset}>Reset</button>
         <button onClick={handleMuteToggle}>{isMuted ? 'Unmute' : 'Mute'}</button>
